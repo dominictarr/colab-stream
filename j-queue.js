@@ -7,7 +7,6 @@ function Queue (options){
   this.__options = options  = options || {}
   if(!options.method)
     options.method = 'POST'
-//  this.__conn = this.connect()
 }
 
 /*Funx.prototype = []
@@ -40,8 +39,6 @@ Queue.prototype = {
     this.__messages = this.__messages || []
     this.__messages.push(a)
     console.log('send:',a)
-//    if(this.__req)
-//    this.__req.abort()
 
     if(this.__timer)//defur sending message, incase send gets called again syncronously.
       clearTimeout(this.__timer)

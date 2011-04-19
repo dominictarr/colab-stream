@@ -16,11 +16,12 @@ exports.__setup = function (test){
     })
 
     req.on('data',function (e){
-      //console.log('got:' + e)
-      res.write(e)
+      process.nextTick(function (){res.write(e)})
     })
 
-    req.on('end',function () {res.end()})
+    req.on('end',function () {
+      process.nextTick(function(){res.end()})
+    })
 
   })
 
