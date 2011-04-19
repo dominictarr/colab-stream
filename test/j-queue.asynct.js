@@ -39,8 +39,8 @@ exports.__setup = function (test){
       test.done()
     })
   }
-
 }
+
 exports.__teardown = function (test){
 
 //  if(echo)
@@ -80,14 +80,28 @@ exports ['send messages'] = function (test){
   jq.drain = (test.done) // called when there are no more messages coming...
 
   messages.forEach(function (e){jq.send(e)})
-
-/*  var j = 0
-  function next () {
-
-    jq.send(messages[j++])
-    if(j < messages.length)
-    setTimeout(next,1e3)
-  }
-  next()*/
 }
 
+exports ['send a two chunks of messages'] = function (test){
+
+  //send two sets of messages, should get a drain in the middle.
+
+  var jq = new Jq({port: port})
+    , messages = [1,2,3,4,5,6,7,8,'a','b','c','d','e','f']
+    , i = 0
+
+  jq.receive = (function (e){
+    console.log('>>>',e)
+    it(e).equal(messages[i++])
+  })
+
+  jq.drain = function (){
+    it(i).equal(8)
+    jq.drain = (test.done) // called when there are no more messages coming...
+  }
+
+  messages.slice(0,8).forEach(function (e){jq.send(e)})
+  setTimeout(function(){
+    messages.slice(8).forEach(function (e){jq.send(e)})
+  },10)
+}

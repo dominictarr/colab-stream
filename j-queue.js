@@ -46,13 +46,12 @@ Queue.prototype = {
       self.connect()
     },0)
   }
-//, __receivers: new Funx()
-//, __drains: new Funx()
 , receive: function (){}
 , drain: function (){}
 , connect: function (){
 
     var self = this
+    //make another request when the first is finished.
     var req = this.__req = http.request(this.__options,function (res){
       data = ''
       res.on('data',function (e){
