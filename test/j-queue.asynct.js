@@ -72,11 +72,11 @@ exports ['send messages'] = function (test){
 
   //make a server which echos commands
 
-  jq.receive(function (e){
+  jq.receive = (function (e){
     console.log('>>>',e)
     it(e).equal(messages[i++])
   })
-  jq.drain(test.done) // called when there are no more messages coming...
+  jq.drain = (test.done) // called when there are no more messages coming...
 
   messages.forEach(function (e){jq.send(e)})
 

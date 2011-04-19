@@ -10,7 +10,7 @@ function Queue (options){
 //  this.__conn = this.connect()
 }
 
-Funx.prototype = []
+/*Funx.prototype = []
 function Funx (){
   if(!(this instanceof Funx)) return new Funx()
   var arguments
@@ -29,7 +29,7 @@ function Funx (){
   this.remove = function(func){
     delete this[this.indexOf(func)]
   }
-}
+}*/
 
 Queue.prototype = {
   send: function (){
@@ -49,10 +49,10 @@ Queue.prototype = {
       self.connect()
     },0)
   }
-, __receivers: new Funx()
-, __drains: new Funx()
-, receive: function (f){this.__receivers.push(f); return this}
-, drain: function (f){this.__drains.push(f); return this}
+//, __receivers: new Funx()
+//, __drains: new Funx()
+, receive: function (){}
+, drain: function (){}
 , connect: function (){
 
     var self = this
@@ -63,10 +63,10 @@ Queue.prototype = {
       })
       res.on('end', function (){
         JSON.parse(data).forEach(function (e){
-          self.__receivers.apply(null,e)
+          self.receive.apply(null,e)
         })
         console.log("DRAQIN!",self.__drains)
-        self.__drains.call()
+        self.drain.call()
       })
     })
 
