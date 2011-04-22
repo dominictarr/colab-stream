@@ -3,25 +3,8 @@ var qfsm = require ('./queue-fsm')
   , Queue = require('./queue')
 
 //exports ['test simple'] = function (test){
-module.exports = function (){
-  var queue = new Queue({
-    get: function (){
-      console.log('getting!')
-      //delay then call q.event('response'[args])
-    },
-    abortGet: function (){
-      console.log('ABORT GET')
-      //clear timeout for get
-    },
-    post: function (data){
-      console.log("POST:", data)
-      console.log(this)
-      var fsm = this
-      setTimeout(function (){
-        fsm.event('response', data)
-      },2000)
-    }
-  })
+module.exports = function (opts){
+  var queue = new Queue(opts)
   var q = qfsm(queue)
 
   var o = {}

@@ -65,16 +65,17 @@ exports ['clear sent'] = function (test){
 
 exports ['post'] = function (test){
 
-  var q = new Queue()
+  var q = new Queue({
+    post:function (e){
+      it(e).deepEqual(toSend)
+      test.done()
+    }
+  })
   var toSend = q.__queue =
      [ [1,2,3]
       , [1]
       , [[]]
       , ['asd'] ]
-  q.doPost = function (e){
-    it(e).equal(JSON.stringify(toSend))
-    test.done()
-  }
 
-  q.post()
+  q.postSending()
 }

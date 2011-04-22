@@ -5,34 +5,39 @@ var FSM = require ('fsm')
 
 module.exports = newQueue
 
-function func(f,n){
-  return (f || function (){console.log('no method:' + n)})
-}
+
 
 function newQueue(inject){
 
+function func(n){
+  if(!inject[n])
+    throw new Error('inject has no function:' + n)
+  return inject[n] //console.log('no method:' + n)})
+}
+
+
   return new FSM({
     start: {
-      send: 'ready'
+      send: ['ready',func('ready')]//set timeout to call tick event
     , response: 'start'
-    , _in: func(inject.get)
+    , _in: [func('get'), func('response')]
     },
     ready: {
-      tick: 'post' //will send
+      tick: 'post'
     , send: 'ready'
-    , _in: [func(inject.enqueue),func(inject.abortGet),func(inject.ready,'ready')]
+    , _in: [func('enqueue'),func('abortGet')]
     },
     post: {
       send: 'queued'
     , error: 'post'
     , response: 'start'
-    , _in: func(inject.post,'post')
+    , _in: func('postSending')
     },
     queued: {
       send: 'queued'
     , error: 'post'
-    , response: ['post', func(inject.clearSent)] //clearSent
-    , _in: func(inject.enqeue)
+    , response: ['post', func('response'), func('clearSent')] //clearSent
+    , _in: func('enqueue')
     }
   })
 }

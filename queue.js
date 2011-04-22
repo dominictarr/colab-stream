@@ -19,19 +19,23 @@ function Queue (opts){
   this.__queue = []
   this.__sent = []
 
-  this.get = opts.get
-  this.abortGet = opts.abortGet
+  for(var key in opts){
+    this[key] = opts[key]
+  }
+
+//  this.get = opts.get
+//  this.abortGet = opts.abortGet
 
   var timeout
-  this.ready = function (){
+/*  this.ready = function (){
     console.log(this)
     var fsm = this
-    if(!timeout)
-    timeout = setTimeout(function (){
-      timeout = null
-      fsm.event('tick')
-    },1000)
-  }
+//    if(!timeout)
+//    timeout = setTimeout(function (){
+//      timeout = null
+//      fsm.event('tick')
+//    },1000)
+  }*/
 
   this.enqueue = function (){
     var queue = self.__queue
@@ -43,19 +47,29 @@ function Queue (opts){
     console.log('enqueue:',queue)
   }
 
-  this.post = function (){
+  this.sending = function (){
+    console.log("SENDING:", sent)
     var queue = self.__queue
     var sent = self.__sent
-    queue.forEach(function (e){
-      sent.push(e)
-    })
+    for(var i = sent.length; i < queue.length; i ++){
+      sent.push(queue[i])
+    }
+  }
 
-    opts.post.call(this,sent)
+  this.postSending = function (){//rename this
+    self.sending()
+    opts.post.call(this,self.__sent)
   }
   self.clearSent = function (){
 
     while(self.__sent.length){
       self.__queue.shift(); self.__sent.shift()
     }
+  }
+  this.ready = function (){//transit to ready from start state.
+    var fsm = this
+    setTimeout(function (){
+      fsm.event('tick')
+    },0)
   }
 }
