@@ -15,7 +15,6 @@ function func(n){
   return inject[n] //console.log('no method:' + n)})
 }
 
-
   return new FSM({
     start: {
       send: ['ready',func('ready')]//set timeout to call tick event

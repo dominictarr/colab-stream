@@ -13,6 +13,7 @@ exports ['simple'] = function (test){
     get: function (){
       //request update from server.
       console.log('getting!')
+      //actually needs to request the number it's up to.
       var fsm = this
     },
     abortGet: function (){
@@ -22,13 +23,13 @@ exports ['simple'] = function (test){
       //send messages to server
       console.log("POST:", data)
       var fsm = this
-//      if(errCount ++ <= 3)
-  //      return this.event('error')//error three times.
-    //  else
-        setTimeout(function (){
-          console.log('TIMEOUT')
-          return fsm.event('response', [data])
-        },200)
+      //test error handling.
+      Math.random() < 0.5
+        ? this.event('error')//error three times.
+        : setTimeout(function (){
+            console.log('TIMEOUT')
+            return fsm.event('response', [data])
+          },20)
     },
     response: function (data){
       errCount = 0
@@ -71,6 +72,7 @@ exports ['simple'] = function (test){
       test.done()
     }
   }
+
   /*
     next is some assertions...
 
@@ -82,6 +84,14 @@ exports ['simple'] = function (test){
     get will need to give the last id it recieved...
 
     support a session id...
-  */
 
+    next is to write the server side?
+      recieves post/:id : new items (which it adds to the list)
+      get/:id/:from returns items that come after :from
+
+      the server may veto some items and not return them.
+
+      if a request comes in, and something has already been written by another client,
+      it responds with the official messages.
+  */
 }

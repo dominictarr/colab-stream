@@ -15,9 +15,8 @@ function nullF(names){
 }
 
 function makeFSM(){
-return qfsm(nullF(s('ready post get abortGet response enqueue postSending clearSent')))
+  return qfsm(nullF(s('ready post get abortGet response enqueue postSending clearSent')))
 }
-
 
 exports ['states & events'] = function (){
   var f = makeFSM()
