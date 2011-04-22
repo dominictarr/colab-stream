@@ -6,8 +6,21 @@ function s (str){
   return str.split(' ')
 }
 
+function nullF(names){
+  var inject = {}
+  names.forEach(function (e){
+    inject[e] = function (){}
+  })
+  return inject
+}
+
+function makeFSM(){
+return qfsm(nullF(s('ready post get abortGet response enqueue postSending clearSent')))
+}
+
+
 exports ['states & events'] = function (){
-  var f = qfsm()
+  var f = makeFSM()
     , states = s('start ready post queued')
     , events = s('send tick error response')
 
@@ -24,7 +37,7 @@ exports ['sequences'] = function (){
   , [s('send tick send error error response'), 'start'] ]
 
   it(examples).every(function check(args){
-    var f = qfsm()
+    var f = makeFSM()
     it(f.sequence(args[0]).getState()).equal(args[1])
   })
 }
